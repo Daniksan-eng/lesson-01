@@ -4,7 +4,8 @@
  */
 
 function isNumeric(str) {
-    let result = +str;
+    if (typeof str !== 'string' || str.trim() === '') return false;
+    const result = +str;
     return !isNaN(result) && isFinite(result);
 }
 
