@@ -32,12 +32,43 @@ const countdownDisplay = document.getElementById('countdown')
 let isTimerStarted = false
 let timerId
 
+// 1. ОБРАБОТЧИК ДЛЯ КНОПКИ "СТАРТ"
 startButton.addEventListener('click', () => {
-  let counter = 3
+  // Защита: если таймер уже тикает, выходим и ничего не делаем
+  if (isTimerStarted) {
+    return;
+  }
 
-  // your code
-})
+  // Говорим системе: "Таймер запущен!"
+  isTimerStarted = true;
+  let counter = 3;
 
+  // Показываем тройку немедленно, не дожидаясь первой секунды
+  countdownDisplay.textContent = counter;
+
+  // Запускаем бесконечный повтор каждую секунду (1000 миллисекунд)
+  timerId = setInterval(() => {
+    counter--; // Уменьшаем счётчик на один
+
+    if (counter === 0) {
+      // Когда дошли до 0:
+      clearInterval(timerId);         // 1. Выключаем таймер
+      isTimerStarted = false;         // 2. Сбрасываем флаг (разрешаем запуск снова)
+      countdownDisplay.textContent = '🚀'; // 3. Показываем ракету
+    } else {
+      // Если ещё не ноль, просто обновляем цифру на экране (2, потом 1)
+      countdownDisplay.textContent = counter;
+    }
+  }, 1000);
+});
+
+// 2. ОБРАБОТЧИК ДЛЯ КНОПКИ "ОТМЕНА"
 cancelButton.addEventListener('click', () => {
-  // your code
-})
+  // Отмена работает только во время отсчёта
+  if (isTimerStarted) {
+    clearInterval(timerId);             // 1. Немедленно глушим таймер по его ID
+    isTimerStarted = false;             // 2. Сбрасываем флаг запуска
+    countdownDisplay.textContent = 'Отменено'; // 3. Пишем текст на экране
+  }
+});
+
